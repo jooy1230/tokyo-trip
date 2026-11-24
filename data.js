@@ -101,7 +101,7 @@ window.TRIP = {
    "date": "11.29",
    "week": "SUN",
    "label": "우리 취향을 모으는 날",
-   "sub": "은행나무 · 빈티지 · 기념일 저녁",
+   "sub": "빈티지 · 스투시 · 기념일 저녁",
    "color": "green",
    "fare": 920,
    "stops": [
@@ -124,15 +124,21 @@ window.TRIP = {
      "ELEPHANT 4-14-6 Jingumae"
     ],
     [
-     "13:00–14:15",
+     "13:00–13:40",
      "오모테산도에서 점심",
-     "오모테산도에서 점심. 17시 우나후지 예약에 맞춰 오후는 짧은 산책 또는 실내 쇼핑 한 곳만 골라요.",
+     "ELEPHANT 방문 후 근처에서 점심. 스투시 하라주쿠점으로 이동할 시간을 남겨요.",
      "Omotesando Tokyo"
     ],
     [
-     "14:15–15:30",
+     "13:45–14:30",
+     "Stüssy 하라주쿠 · 의류 쇼핑",
+     "ELEPHANT에서 도보 이동 후 티셔츠·후디·모자 쇼핑. 이동·대기 포함 계획 시간. 줄이 길면 공원 산책부터 생략하고 15:30 시부야 출발은 지켜요. 면세 대응은 결제 전 매장 확인.",
+     "Stussy Harajuku 4-28-2 Jingumae"
+    ],
+    [
+     "14:30–15:30",
      "요요기공원 또는 시부야 · 짧게",
-     "맑으면 요요기공원 30분 산책 후 시부야로 이동. 비·찬바람이면 공원 대신 히카리에 d47. 15:30에는 시부야에서 출발하며, 시부야 스카이는 기본 일정에서 제외해요.",
+     "스투시 후 시부야로 이동. 시간이 남으면 요요기공원을 짧게 보고, 대기가 길거나 비가 오면 공원 생략. 15:30 시부야 출발, 우나후지 17시 예약 우선.",
      "Yoyogi Park Harajuku Gate"
     ],
     [
@@ -342,9 +348,15 @@ window.TRIP = {
      "APA Hotel Nihombashi Bakuroyokoyama Ekimae"
     ],
     [
-     "15:00–17:30",
+     "14:30–16:30",
      "호텔 → 나리타 제3터미널",
-     "15~15:30 호텔 출발. 히가시니혼바시에서 나리타공항행 직통편 탑승. 17~17:30 제3터미널 도착 목표.",
+     "면세 반출 확인 여유를 위해 14:30 호텔 출발, 16:30 공항 도착 목표. 나리타공항행 직통편의 실제 시각 확인.",
+     "Narita Airport Terminal 3"
+    ],
+    [
+     "16:30–17:30",
+     "면세 세관 확인 → 수하물 위탁",
+     "여권·면세 구매품을 모두 지닌 채 면세 단말 절차부터 진행. 검사 대상이면 물품 확인을 마친 뒤 짐을 맡겨요. 이 시간은 여유용 계획이며 실제 대기는 달라요.",
      "Narita Airport Terminal 3"
     ],
     [
@@ -398,7 +410,12 @@ window.TRIP = {
    "긴자 5-5-9 · 11:00–20:00",
    "11/28",
    "https://www.brandoff.co.jp/shop_list/shop.php?shop=010_ginza_head",
-   "BRAND OFF Ginza Main Store"
+   "BRAND OFF Ginza Main Store",
+   {
+    "status": "면세 대응 확인",
+    "note": "긴자 본점 공식 면세 표시. 환급 수단·수수료·지급 시점은 결제 전 확인.",
+    "url": "https://www.brandoff.co.jp/shop_list/shop.php?shop=010_ginza_head"
+   }
   ],
   [
    "KOMEHYO GINZA",
@@ -407,7 +424,12 @@ window.TRIP = {
    "긴자 2-7-18 · 11:00–20:00",
    "11/28",
    "https://komehyo.jp/kaitori/shop/ginza",
-   "KOMEHYO GINZA 2-7-18"
+   "KOMEHYO GINZA 2-7-18",
+   {
+    "status": "면세 대응 확인",
+    "note": "긴자점 공식 Tax Free 표시. 중고 상품도 구매 조건을 충족하면 신청 가능.",
+    "url": "https://komehyo.jp/kaitori/shop/ginza"
+   }
   ],
   [
    "다이코쿠야 긴자점",
@@ -416,7 +438,12 @@ window.TRIP = {
    "긴자 2-2-17 · 11:00–20:00",
    "11/28",
    "https://www.daikokuya.com/shops/ginza.html",
-   "Daikokuya Ginza 2-2-17"
+   "Daikokuya Ginza 2-2-17",
+   {
+    "status": "확인 필요",
+    "note": "체인 공식 매장 면세 안내는 있으나 오래된 금액 기준이 남아 있어 긴자점의 새 제도 대응을 재확인.",
+    "url": "https://corporate.daikokuya.com/index_en.html"
+   }
   ],
   [
    "WATCHNIAN 긴자 5초메",
@@ -425,7 +452,12 @@ window.TRIP = {
    "긴자 5-7-19 · 11:00–20:00",
    "11/28 선택",
    "https://watchnian.com/shop/store/o026018/",
-   "WATCHNIAN Ginza 5 chome"
+   "WATCHNIAN Ginza 5 chome",
+   {
+    "status": "면세 대응 확인",
+    "note": "공식 FAQ상 매장 구매 면세 지원, 온라인 제외. 해당 상품과 환급 절차 확인.",
+    "url": "https://watchnian.com/shop/pages/faq.aspx"
+   }
   ],
   [
    "Spiral Market 아오야마",
@@ -434,7 +466,12 @@ window.TRIP = {
    "미나미아오야마 5-6-23, 2F · 11:00–19:00",
    "11/29",
    "https://www.spiral.co.jp/shoplist/spiral_market",
-   "Spiral Market Aoyama"
+   "Spiral Market Aoyama",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://www.spiral.co.jp/shoplist/spiral_market"
+   }
   ],
   [
    "ELEPHANT",
@@ -443,7 +480,12 @@ window.TRIP = {
    "진구마에 4-14-6, 102 · 일요일 12:00–19:00",
    "11/29",
    "https://elephant-life.com/pages/shop-information",
-   "ELEPHANT 4-14-6 Jingumae"
+   "ELEPHANT 4-14-6 Jingumae",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://elephant-life.com/pages/shop-information"
+   }
   ],
   [
    "d47 design travel store",
@@ -452,7 +494,12 @@ window.TRIP = {
    "시부야 히카리에 8F · 영업일·시간 SNS 확인",
    "11/29 선택",
    "https://www.d-department.com/ext/shop/d47.html",
-   "d47 design travel store Shibuya"
+   "d47 design travel store Shibuya",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://www.d-department.com/ext/shop/d47.html"
+   }
   ],
   [
    "道具屋 nobori",
@@ -461,7 +508,12 @@ window.TRIP = {
    "고토부키 3-7-1, 1F · 11시 개점",
    "12/1",
    "https://fromafar.stores.jp/about",
-   "Douguya nobori 3-7-1 Kotobuki"
+   "Douguya nobori 3-7-1 Kotobuki",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://fromafar.stores.jp/about"
+   }
   ],
   [
    "proto 器とタカラモノ",
@@ -470,7 +522,12 @@ window.TRIP = {
    "구라마에 4-20-12, 2F · 평일 12:00–19:00",
    "12/1",
    "https://proto-art.stores.jp/about",
-   "proto 4-20-12 Kuramae"
+   "proto 4-20-12 Kuramae",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://proto-art.stores.jp/about"
+   }
   ],
   [
    "GLITCH COFFEE GINZA",
@@ -479,7 +536,12 @@ window.TRIP = {
    "히가시긴자 · 09:00–18:00",
    "11/28",
    "https://shop.glitchcoffee.com/pages/store-ginza",
-   "GLITCH COFFEE GINZA"
+   "GLITCH COFFEE GINZA",
+   {
+    "status": "음료 대상 아님",
+    "note": "매장에서 마시는 커피는 대상 제외. 반출할 원두·굿즈 판매의 면세 대응은 별도 확인.",
+    "url": "https://www.customs.go.jp/kaigairyoko/taxrefund.htm"
+   }
   ],
   [
    "BEAMS GINZA",
@@ -488,7 +550,12 @@ window.TRIP = {
    "긴자 4-4-1 · 2–3층",
    "11/28 선택",
    "https://www.beams.co.jp/shop/gnz/",
-   "BEAMS Ginza"
+   "BEAMS Ginza",
+   {
+    "status": "면세 대응 확인",
+    "note": "긴자점 공식 면세 표시. 환급 수단·수수료는 매장 안내 확인.",
+    "url": "https://www.beams.co.jp/shop/gnz/"
+   }
   ],
   [
    "미야코시야 커피 긴자점",
@@ -497,7 +564,12 @@ window.TRIP = {
    "긴자 5-10-6",
    "11/30 저녁 선택",
    "https://www.miyakoshiya-coffee.co.jp/shopinfo/ginza",
-   "Miyakoshiya Coffee Ginza 5-10-6"
+   "Miyakoshiya Coffee Ginza 5-10-6",
+   {
+    "status": "음료 대상 아님",
+    "note": "매장에서 마시는 커피는 대상 제외. 반출할 원두·상품은 매장에 따로 확인.",
+    "url": "https://www.customs.go.jp/kaigairyoko/taxrefund.htm"
+   }
   ],
   [
    "파블로프 · GINZA SIX",
@@ -506,7 +578,12 @@ window.TRIP = {
    "GINZA SIX B2 · 10:30–20:30",
    "11/30 저녁 선택",
    "https://ginza6.tokyo/shops/detail/8221407/?tenant_cd=8221407",
-   "Pavlov GINZA SIX"
+   "Pavlov GINZA SIX",
+   {
+    "status": "조건부·확인 필요",
+    "note": "SIX 1층에 면세 카운터가 있지만 파블로프 참여·합산·수수료는 확인 필요. 일본에서 먹을 과자는 대상 제외.",
+    "url": "https://ginza6.tokyo/services/"
+   }
   ],
   [
    "긴자 다치바나",
@@ -515,7 +592,12 @@ window.TRIP = {
    "긴자 8-7-19 · 일요일 휴무",
    "이번 일정 제외",
    "https://ginza.kokosil.net/ja/place/00001c0000000000000200000016b86a",
-   "Ginza Tachibana karinto"
+   "Ginza Tachibana karinto",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://ginza.kokosil.net/ja/place/00001c0000000000000200000016b86a"
+   }
   ],
   [
    "야마야 긴자",
@@ -524,7 +606,12 @@ window.TRIP = {
    "긴자 7-12-18",
    "11/30 저녁 선택",
    "https://dpoint.docomo.ne.jp/map/12060_143124/",
-   "Yamaya Ginza"
+   "Yamaya Ginza",
+   {
+    "status": "확인 필요",
+    "note": "과거 공식 면세 대상 지점에 포함. 2026년 11월 이후 해당 지점 환급 방식·운영 여부 재확인.",
+    "url": "https://www.yamaya.jp/pages/cp/press/data/file194.pdf"
+   }
   ],
   [
    "리커 마운틴 긴자 777",
@@ -533,7 +620,12 @@ window.TRIP = {
    "긴자 7-7-7",
    "11/30 대안",
    "https://www.likaman.co.jp/shop/tokyo/chuo-ku/8466.html",
-   "Liquor Mountain Ginza 777"
+   "Liquor Mountain Ginza 777",
+   {
+    "status": "면세 대응 확인",
+    "note": "해당 지점 공식 면세점 표시. 위스키는 일본에서 마시지 않고 직접 반출.",
+    "url": "https://www.likaman.co.jp/shop/tokyo/chuo-ku/8466.html"
+   }
   ],
   [
    "우나후지 도쿄 오페라시티점",
@@ -542,7 +634,12 @@ window.TRIP = {
    "하쓰다이 · 오페라시티 53층",
    "11/29 · 17:00 예약 확정",
    "https://sumiyaki-unafuji.com/shops/tokyo_opera_city/",
-   "Sumiyaki Unafuji Tokyo Opera City"
+   "Sumiyaki Unafuji Tokyo Opera City",
+   {
+    "status": "대상 아님",
+    "note": "예약한 식사·음료는 일본에서 소비하므로 관광객 물품 면세 대상이 아니에요.",
+    "url": "https://www.customs.go.jp/kaigairyoko/taxrefund.htm"
+   }
   ],
   [
    "아사히 스카이룸",
@@ -551,7 +648,26 @@ window.TRIP = {
    "스미다구 아즈마바시 1-23-1 · 22층",
    "12/1 선택",
    "https://www.colowide.co.jp/gs/store_detail.php?id=83851",
-   "Asahi Sky Room Asakusa"
+   "Asahi Sky Room Asakusa",
+   {
+    "status": "대상 아님",
+    "note": "현장에서 마시는 맥주·식사는 물품 면세 대상이 아니에요.",
+    "url": "https://www.customs.go.jp/kaigairyoko/taxrefund.htm"
+   }
+  ],
+  [
+   "Stüssy 하라주쿠",
+   "패션",
+   "ELEPHANT 다음 방문. 티셔츠·후디·모자. 대기가 길면 요요기 산책을 줄이고 우나후지 예약 시간을 지켜요.",
+   "진구마에 4-28-2 · 매일 11:00–19:00",
+   "11/29 · 13:45",
+   "https://jp.stussy.com/blogs/chapters/stussy-harajuku",
+   "Stussy Harajuku 4-28-2 Jingumae",
+   {
+    "status": "확인 필요",
+    "note": "방문 지점의 관광객 면세·새 환급 방식 안내를 공식 공개 정보에서 확인하지 못했어요. 불가 확정이 아니며 결제 전에 물어보세요.",
+    "url": "https://jp.stussy.com/blogs/chapters/stussy-harajuku"
+   }
   ]
  ],
  "rides": [
@@ -673,6 +789,21 @@ window.TRIP = {
    "우나후지 메뉴",
    "https://menu-tokyo.jp/search/detail.php?lang=jp&shop_id=2600117",
    "히쓰마부시 메뉴·가격 참고"
+  ],
+  [
+   "2026년 11월 면세 환급 제도",
+   "https://www.customs.go.jp/kaigairyoko/taxrefund.htm",
+   "일본 세관 · 세금 포함 결제 후 출국 확인"
+  ],
+  [
+   "여행자 면세 절차·Visit Japan Web",
+   "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00028.html",
+   "일본 관광청 · 수하물 위탁 전 처리"
+  ],
+  [
+   "스투시 하라주쿠 공식 매장",
+   "https://jp.stussy.com/blogs/chapters/stussy-harajuku",
+   "진구마에 4-28-2 · 11~19시 · 면세는 미확인"
   ]
  ]
 };
