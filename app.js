@@ -45,10 +45,10 @@
   "APA → 아사쿠사선으로 아사쿠사 → 도보로 고토부키의 nobori와 구라마에의 proto → 아사쿠사선으로 APA에 돌아와 짐 찾기 → 공항철도로 나리타 제3터미널. 16:30 도착 목표."
 ];
  function routeMap(d) {
-  const file = `route-maps/day-${String(d.id + 1).padStart(2, '0')}.png`;
+  const file = `route-maps/day-${String(d.id + 1).padStart(2, '0')}.png?v=2`;
   return `<figure class="route-map">
-   <img src="${file}" width="900" height="${[610,758,795,610][d.id]}" alt="${esc(routeMapDescriptions[d.id])}" loading="lazy" decoding="async">
-   <figcaption><span>번호와 화살표를 따라 이동해요.</span><a href="${file}" target="_blank" rel="noopener noreferrer" aria-label="${d.date} 이동 지도 크게 보기">지도 크게 보기</a></figcaption>
+   <img src="${file}" width="840" height="1320" alt="${esc(routeMapDescriptions[d.id])}" loading="lazy" decoding="async">
+   <figcaption><span>위에서 아래로 이동 순서를 확인해요.</span><a href="${file}" target="_blank" rel="noopener noreferrer" aria-label="${d.date} 이동 지도 크게 보기">지도 크게 보기</a></figcaption>
   </figure>`;
  }
  function timeline(d){return `<div class="daytitle"><h3>${esc(d.label)}</h3><span class="pill">${d.date} ${d.week}</span></div>${routeMap(d)}<ol class="timeline">${d.stops.map(s=>`<li class="stop"><time>${esc(s[0])}</time><div class="stopbody"><h4>${esc(s[1])}</h4><p>${esc(s[2])}</p>${external(map(s[3]),'지도에서 보기 ↗')}</div></li>`).join('')}</ol>`;}
