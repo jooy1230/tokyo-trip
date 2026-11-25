@@ -45,7 +45,7 @@
   "APA → 아사쿠사선으로 아사쿠사 → 도보로 고토부키의 nobori와 구라마에의 proto → 아사쿠사선으로 APA에 돌아와 짐 찾기 → 공항철도로 나리타 제3터미널. 16:30 도착 목표."
 ];
  function routeMap(d) {
-  const file = `route-maps/day-${String(d.id + 1).padStart(2, '0')}.png?v=4`;
+  const file = `route-maps/day-${String(d.id + 1).padStart(2, '0')}.png?v=5`;
   return `<figure class="route-map">
    <img src="${file}" width="880" height="480" alt="${esc(routeMapDescriptions[d.id])}" loading="lazy" decoding="async">
    <figcaption><span>이동 순서도 · 축척 없음</span><a href="${file}" target="_blank" rel="noopener noreferrer" aria-label="${d.date} 이동 지도 크게 보기">지도 크게 보기</a></figcaption>
