@@ -5,7 +5,7 @@
  const key='our-days-tokyo-2026-v1'; let saved={};
  try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{};}catch(e){}
  const defaults={fx:9.5,budget:{hotel:53475,flight:883600,transport:10540,ticket:21800,dpa:5000,extra:3000,sky:6800,food:32000,dinner:20000,cafe:8000,buffer:10000,shopping:0},enabled:{dpa:false,extra:false,sky:false},checks:{},favorites:[]};
- const state={...defaults,...saved,budget:{...defaults.budget,...saved.budget},enabled:{...defaults.enabled,...saved.enabled},checks:{...saved.checks},favorites:Array.isArray(saved.favorites)?saved.favorites:[]};
+ const state={...defaults,...saved,budget:{...defaults.budget,...saved.budget},budgetCurrency:{...saved.budgetCurrency},enabled:{...defaults.enabled,...saved.enabled},checks:{...saved.checks},favorites:Array.isArray(saved.favorites)?saved.favorites:[]};
  if((saved.bookingRevision||0)<2){
   state.budget.hotel=defaults.budget.hotel;
   state.budget.flight=defaults.budget.flight;
@@ -20,7 +20,12 @@
   state.bookingRevision=3;
  }
  if(!Number.isFinite(state.fx)||state.fx<=0)state.fx=9.5;
- for(const k in defaults.budget)if(!Number.isFinite(state.budget[k])||state.budget[k]<0)state.budget[k]=defaults.budget[k];
+ for(const k in defaults.budget){
+  if(!Number.isFinite(state.budget[k])||state.budget[k]<0){
+   state.budget[k]=defaults.budget[k];
+   delete state.budgetCurrency[k];
+  }
+ }
  // One source amount per display; conversions always use the current planning rate.
  const amountPattern=/(?:[¥₩][\d,]+(?:\.\d+)?|[\d,]+(?:\.\d+)?\s*(?:만\s*)?(?:원|엔))/g;
  function dualAmount(value,currency){return currency==='JPY'?`¥${fmt(value)} (약 ₩${fmt(value*state.fx)})`:`₩${fmt(value)} (약 ¥${fmt(value/state.fx)})`;}
@@ -31,7 +36,6 @@
    matches.forEach(m=>{fragment.append(document.createTextNode(text.slice(offset,m.index)));const label=m[0],currency=label.includes('¥')||label.endsWith('엔')?'JPY':'KRW';const value=Number(label.replace(/[^0-9.]/g,''))*(label.includes('만')?10000:1);const pair=document.createElement('span');pair.className='currency-pair';pair.dataset.amount=value;pair.dataset.currency=currency;const primary=document.createElement('span');primary.textContent=label;const secondary=document.createElement('span');secondary.className='currency-converted';pair.append(primary,secondary);fragment.append(pair);offset=m.index+label.length;});fragment.append(document.createTextNode(text.slice(offset)));node.replaceWith(fragment);
   });
   document.querySelectorAll('.currency-pair').forEach(el=>{const value=Number(el.dataset.amount);el.lastElementChild.textContent=el.dataset.currency==='JPY'?` (약 ₩${fmt(value*state.fx)})`:` (약 ¥${fmt(value/state.fx)})`;});
-  document.querySelectorAll('[data-input-conversion]').forEach(el=>{const k=el.dataset.inputConversion;const row=rows.find(r=>r[0]===k);el.textContent=row[2]==='JPY'?`약 ₩${fmt(state.budget[k]*state.fx)}`:`약 ¥${fmt(state.budget[k]/state.fx)}`;});
  }
  let day=0,routeDay=0,shopFilter='전체';
  const persist=()=>{try{localStorage.setItem(key,JSON.stringify(state));}catch(e){}};
@@ -92,26 +96,92 @@
  ['buffer','예비비 · 두 사람','JPY','추가 이동·택시·가격 변동 등. 실제 사용액 아님','예상'],
  ['shopping','쇼핑 · 두 사람','JPY','명품·빈티지·그릇·디즈니 굿즈. 원하는 한도 입력','별도 예산']
  ];
+ const budgetCurrencies=[['JPY','엔화'],['KRW','원화']];
  function enabled(k){return !['dpa','extra','sky'].includes(k)||state.enabled[k];}
+ // Keep the entered currency and amount so changing the rate does not compound rounding.
+ function budgetAmount([key,,defaultCurrency],currency){
+  const savedCurrency=state.budgetCurrency[key];
+  const source=savedCurrency==='JPY'||savedCurrency==='KRW'?savedCurrency:defaultCurrency;
+  const value=state.budget[key];
+  if(source===currency)return value;
+  return currency==='KRW'?value*state.fx:value/state.fx;
+ }
+ function syncBudgetInputs(activeInput){
+  for(const row of rows){
+   for(const [currency] of budgetCurrencies){
+    const input=$(`#budget-${row[0]}-${currency}`);
+    if(input!==activeInput)input.value=Math.round(budgetAmount(row,currency));
+   }
+  }
+ }
  function renderBudget(){
- $('#fx').value=state.fx;
- $('#budgetrows').innerHTML=rows.map(([k,title,currency,note,type])=>`<tr><td><label>${['dpa','extra','sky'].includes(k)?`<input type="checkbox" data-enable="${k}" ${state.enabled[k]?'checked':''} aria-label="${esc(title)} 예산 포함">`:''}<span>${esc(title)} <span class="badge ${['공식 공지','운임 참고'].includes(type)?'':'est'}">${type}</span><small>${esc(note)}</small></span></label></td><td><input class="costinput" inputmode="numeric" type="number" min="0" max="1000000000" step="${currency==='KRW'?'1000':'100'}" data-cost="${k}" value="${state.budget[k]}" aria-label="${esc(title)} ${currency==='KRW'?'원':'엔'}"><small>${currency==='KRW'?'KRW · 원':'JPY · 엔'}</small><small class="input-conversion" data-currency-skip data-input-conversion="${k}"></small></td></tr>`).join('');
- updateTotal();
+  $('#fx').value=state.fx;
+  $('#budgetrows').innerHTML=rows.map(([k,title,,note,type])=>{
+   const optional=['dpa','extra','sky'].includes(k);
+   const fields=budgetCurrencies.map(([currency,name])=>`
+    <label class="budget-field" for="budget-${k}-${currency}">
+     <span>${name} <span class="budget-currency-code">${currency}</span></span>
+     <input class="costinput" inputmode="numeric" type="number" min="0" step="1"
+      id="budget-${k}-${currency}" data-cost="${k}" data-currency="${currency}"
+      aria-label="${esc(title)} ${name}">
+    </label>`).join('');
+   return `<tr><td><label>${optional?`<input type="checkbox" data-enable="${k}" ${state.enabled[k]?'checked':''} aria-label="${esc(title)} 예산 포함">`:''}
+    <span>${esc(title)} <span class="badge ${['공식 공지','운임 참고'].includes(type)?'':'est'}">${type}</span><small>${esc(note)}</small></span>
+    </label></td><td><div class="budget-fields">${fields}</div></td></tr>`;
+  }).join('');
+  updateTotal();
  }
- function totals(){const breakdown=rows.filter(r=>enabled(r[0])).map(r=>({id:r[0],title:r[1],value:state.budget[r[0]]*(r[2]==='JPY'?state.fx:1)}));return {breakdown,total:breakdown.reduce((s,r)=>s+r.value,0)};}
- function updateTotal(){
- const {breakdown,total}=totals();$('#totalKRW').textContent='₩'+fmt(total);$('#perperson').textContent='₩'+fmt(total/2);
- $('#budgetbasis').textContent='성인 2명 · 3박 4일'+(state.budget.flight===0?' · 항공권 미포함':' · 항공권 포함')+(state.budget.shopping===0?' · 쇼핑비 미입력':' · 쇼핑 예산 포함');
- $('#hotelcheck').textContent=state.budget.hotel*state.fx<=900000?'90만 원 이내 ✓':'₩'+fmt(state.budget.hotel*state.fx-900000)+' 초과';$('#hotelcheck').style.color=state.budget.hotel*state.fx<=900000?'#c0d1a8':'#ffb2a0';
- const groups=[['숙박',state.budget.hotel*state.fx,'#adbda0'],['교통',state.budget.transport*state.fx,'#8ca4b0'],['디즈니·전망대',(state.budget.ticket+(enabled('dpa')?state.budget.dpa:0)+(enabled('extra')?state.budget.extra:0)+(enabled('sky')?state.budget.sky:0))*state.fx,'#d7b76a'],['식사·카페',(state.budget.food+state.budget.dinner+state.budget.cafe)*state.fx,'#c98062'],['항공·쇼핑·예비비',state.budget.flight+(state.budget.shopping+state.budget.buffer)*state.fx,'#989184']];
- $('#budgetbar').innerHTML=groups.map(g=>`<div style="width:${total?g[1]/total*100:0}%;background:${g[2]}"></div>`).join('');
- $('#summaryRows').innerHTML=groups.map(g=>`<div class="summaryrow"><span><i style="display:inline-block;width:6px;height:6px;background:${g[2]};margin-right:8px;border-radius:50%"></i>${g[0]}</span><b>₩${fmt(g[1])}</b></div>`).join('');
- refreshCurrencyDisplays();persist();
+ function totals(){
+  const breakdown=rows.filter(([key])=>enabled(key)).map(row=>({id:row[0],title:row[1],value:budgetAmount(row,'KRW')}));
+  return {breakdown,total:breakdown.reduce((sum,row)=>sum+row.value,0)};
  }
- $('#budgetrows').addEventListener('input',e=>{if(e.target.dataset.cost){const raw=Number(e.target.value);state.budget[e.target.dataset.cost]=Math.max(0,Math.min(1000000000,Number.isFinite(raw)?raw:0));updateTotal();}});
+ function updateTotal(activeInput){
+  syncBudgetInputs(activeInput);
+  const {breakdown,total}=totals();
+  const costs=Object.fromEntries(breakdown.map(({id,value})=>[id,value]));
+  $('#totalKRW').textContent='₩'+fmt(total);
+  $('#perperson').textContent='₩'+fmt(total/2);
+  $('#budgetbasis').textContent='성인 2명 · 3박 4일'+(costs.flight===0?' · 항공권 미포함':' · 항공권 포함')+(costs.shopping===0?' · 쇼핑비 미입력':' · 쇼핑 예산 포함');
+  const overHotelLimit=costs.hotel-900000;
+  $('#hotelcheck').textContent=overHotelLimit<=0?'90만 원 이내 ✓':'₩'+fmt(overHotelLimit)+' 초과';
+  $('#hotelcheck').style.color=overHotelLimit<=0?'#c0d1a8':'#ffb2a0';
+  const groups=[
+   ['숙박',costs.hotel,'#adbda0'],
+   ['교통',costs.transport,'#8ca4b0'],
+   ['디즈니·전망대',costs.ticket+(costs.dpa??0)+(costs.extra??0)+(costs.sky??0),'#d7b76a'],
+   ['식사·카페',costs.food+costs.dinner+costs.cafe,'#c98062'],
+   ['항공·쇼핑·예비비',costs.flight+costs.shopping+costs.buffer,'#989184']
+  ];
+  $('#budgetbar').innerHTML=groups.map(g=>`<div style="width:${total?g[1]/total*100:0}%;background:${g[2]}"></div>`).join('');
+  $('#summaryRows').innerHTML=groups.map(g=>`<div class="summaryrow"><span><i style="display:inline-block;width:6px;height:6px;background:${g[2]};margin-right:8px;border-radius:50%"></i>${g[0]}</span><b>₩${fmt(g[1])}</b></div>`).join('');
+  refreshCurrencyDisplays();
+  persist();
+ }
+ $('#budgetrows').addEventListener('input',e=>{
+  const {cost,currency}=e.target.dataset;
+  if(!cost)return;
+  const raw=e.target.valueAsNumber;
+  state.budget[cost]=Math.max(0,Math.min(1000000000,Number.isFinite(raw)?Math.round(raw):0));
+  state.budgetCurrency[cost]=currency;
+  updateTotal(e.target);
+ });
+ $('#budgetrows').addEventListener('focusout',e=>{
+  const {cost,currency}=e.target.dataset;
+  if(cost){
+   const row=rows.find(([key])=>key===cost);
+   e.target.value=Math.round(budgetAmount(row,currency));
+  }
+ });
  $('#budgetrows').addEventListener('change',e=>{if(e.target.dataset.enable){state.enabled[e.target.dataset.enable]=e.target.checked;updateTotal();}});
  $('#fx').oninput=e=>{const n=Number(e.target.value);if(n>0&&n<=100){state.fx=n;updateTotal();}};
- $('#resetBudget').onclick=()=>{state.budget={...defaults.budget};state.enabled={...defaults.enabled};state.fx=defaults.fx;renderBudget();toast('예산을 기본값으로 되돌렸어요');};
+ $('#resetBudget').onclick=()=>{
+  state.budget={...defaults.budget};
+  state.budgetCurrency={};
+  state.enabled={...defaults.enabled};
+  state.fx=defaults.fx;
+  renderBudget();
+  toast('예산을 기본값으로 되돌렸어요');
+ };
  $('#copyBudget').onclick=async()=>{const {breakdown,total}=totals();const text=['도쿄 기념일 여행 · 성인 2명 · 2026.11.28~12.1',`계획 환산 기준: 1엔 = ${state.fx}원 (실시간 아님)`,...breakdown.map(r=>`${r.title}: ${dualAmount(r.value,'KRW')}`),`합계: ${dualAmount(total,'KRW')}`,state.budget.flight===0?'항공권 미입력·합계 제외':'항공권 입력액 포함',state.budget.shopping===0?'쇼핑 예산 미입력':'쇼핑 예산 포함','숙박은 제시된 총액, 항공은 실결제 기준. 식비·교통·입장권은 계획 예산.'].join('\n');try{await navigator.clipboard.writeText(text);toast('예산 요약을 복사했어요');}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.append(ta);ta.select();try{document.execCommand('copy');toast('예산 요약을 복사했어요');}catch(err){toast('브라우저에서 복사를 허용해 주세요');}ta.remove();}};
  $('#rides').innerHTML=T.rides.map((r,i)=>`<article class="ride ${i===0?'top':''}"><span class="rideno">${r[0]}</span><h4>${esc(r[1])}</h4><div class="english">${esc(r[2])}</div><p>${esc(r[3])}</p><div class="ridefoot"><span>${esc(r[4])}</span><b>DPA ¥${fmt(r[5])} / 1인</b></div><small class="subtle" style="font-size:10px">${esc(r[6])}</small></article>`).join('');
  function renderShops(){const types=['전체','리유스','빈티지','그릇','디자인','패션','커피·디저트','위스키','맛집','저장한 곳'];$('#shopfilters').innerHTML=types.map(t=>`<button class="chip ${t===shopFilter?'on':''}" data-filter="${t}" aria-pressed="${t===shopFilter}">${t==='저장한 곳'?'♡ ':''}${t}</button>`).join('');const list=T.shops.map((s,i)=>({s,i})).filter(({s,i})=>shopFilter==='전체'||shopFilter==='저장한 곳'&&state.favorites.includes(i)||s[1]===shopFilter);$('#shopsgrid').innerHTML=list.length?list.map(({s,i})=>`<article class="shopcard"><div class="shophead"><span class="badge ${s[1]==='빈티지'?'red':''}">${esc(s[1])} · ${esc(s[4])}</span><button class="save ${state.favorites.includes(i)?'saved':''}" data-save="${i}" aria-label="${esc(s[0])} 저장" aria-pressed="${state.favorites.includes(i)}">${state.favorites.includes(i)?'♥':'♡'}</button></div><h3>${esc(s[0])}</h3><p>${esc(s[2])}</p><address>${esc(s[3])}</address>${s[7]?`<div class="taxnote"><b>${esc(s[7].status)}</b><p>${esc(s[7].note)}</p><a href="#taxrefund">면세·환급 절차 보기</a></div>`:''}<div class="shoplinks">${external(map(s[6]),'지도 ↗')}${external(s[5],'공식 안내 ↗')}</div></article>`).join(''):'<p class="subtle">아직 저장한 매장이 없어요. 마음에 드는 곳의 ♡를 눌러보세요.</p>';}
