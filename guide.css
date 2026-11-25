@@ -205,3 +205,14 @@ header .calendar-dates time,header .trip-calendar b {font-variant-numeric:tabula
 
 /* Tax refund guide */
 #taxrefund{--wash:#e8eef1;--accent:#36566a}.taxnote{background:#edf0e9;border-left:3px solid #4f6244;padding:12px;margin:14px 0;font-size:14px}.taxnote p{font-size:14px;margin:6px 0}.taxsteps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}.taxsteps p,.taxdetails p{font-size:16px}.taxdetails{padding:20px;background:#fffdf8;border:1px solid #d9dacc;border-radius:14px;margin:16px 0}.taxdetails summary{font-weight:750;font-size:18px;cursor:pointer}.taxtable{width:100%;border-collapse:collapse;text-align:left;font-size:15px}.taxtable th,.taxtable td{padding:14px 12px;border-bottom:1px solid #d9dacc;vertical-align:top}.taxtable th:first-child{width:24%}.taxtable td:nth-child(2){width:20%}.taxtable a{display:inline-block;margin-top:6px;color:#36566a}@media(max-width:650px){.taxsteps{grid-template-columns:1fr}.taxdetails{padding:14px}.taxtable thead{display:none}.taxtable tr{display:block;padding:12px 0;border-bottom:1px solid #d9dacc}.taxtable th,.taxtable td{display:block;width:auto!important;border:0;padding:4px 0}.taxnote{font-size:14px}}
+
+/* Route diagrams in the day tabs and expanded itinerary. */
+.route-map { margin: 16px 0 24px; }
+.route-map img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid #263d3422; }
+.route-map figcaption { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; margin-top: 6px; font-size: 0.875rem; color: #505c54; }
+.route-map figcaption a { display: inline-flex; min-height: 44px; align-items: center; color: #36566a; font-weight: 700; }
+@media print {
+  .route-map { break-inside: avoid; }
+  .route-map img { max-width: 460px; }
+  .route-map figcaption a { display: none; }
+}
