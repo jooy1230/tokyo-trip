@@ -238,6 +238,4 @@ header .calendar-dates time,header .trip-calendar b {font-variant-numeric:tabula
   background: #f5f3eb;
   border-radius: 4px 4px 0 0;
   font-variant-numeric: tabular-nums;
-  appearance: textfield;
 }
-.budget-field .costinput::-webkit-inner-spin-button { appearance: none; }

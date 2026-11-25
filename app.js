@@ -110,7 +110,7 @@
   for(const row of rows){
    for(const [currency] of budgetCurrencies){
     const input=$(`#budget-${row[0]}-${currency}`);
-    if(input!==activeInput)input.value=Math.round(budgetAmount(row,currency));
+    if(input!==activeInput)input.value=fmt(budgetAmount(row,currency));
    }
   }
  }
@@ -121,7 +121,7 @@
    const fields=budgetCurrencies.map(([currency,name])=>`
     <label class="budget-field" for="budget-${k}-${currency}">
      <span>${name} <span class="budget-currency-code">${currency}</span></span>
-     <input class="costinput" inputmode="numeric" type="number" min="0" step="1"
+     <input class="costinput" inputmode="numeric" type="text"
       id="budget-${k}-${currency}" data-cost="${k}" data-currency="${currency}"
       aria-label="${esc(title)} ${name}">
     </label>`).join('');
@@ -157,19 +157,39 @@
   refreshCurrencyDisplays();
   persist();
  }
+ function formatBudgetInput(input,formatted,inputType){
+  if(input.value===formatted)return;
+  // Count digits to the right so inserting a separator does not move the editing point.
+  let digitsRight=input.value.slice(input.selectionStart).normalize('NFKC').replace(/\D/g,'').length;
+  let caret=formatted.length;
+  while(caret>0&&digitsRight>0){
+   if(formatted[--caret]!==',')digitsRight--;
+  }
+  if(inputType==='deleteContentBackward'&&formatted[caret-1]===',')caret--;
+  input.value=formatted;
+  input.setSelectionRange(caret,caret);
+ }
  $('#budgetrows').addEventListener('input',e=>{
-  const {cost,currency}=e.target.dataset;
-  if(!cost)return;
-  const raw=e.target.valueAsNumber;
-  state.budget[cost]=Math.max(0,Math.min(1000000000,Number.isFinite(raw)?Math.round(raw):0));
+  const input=e.target;
+  const {cost,currency}=input.dataset;
+  if(!cost||e.isComposing)return;
+  const digits=input.value.normalize('NFKC').replace(/[,\s¥₩]/g,'').replace(/[원엔]$/,'');
+  if(!/^\d*$/.test(digits)){
+   const row=rows.find(([key])=>key===cost);
+   formatBudgetInput(input,fmt(budgetAmount(row,currency)),e.inputType);
+   return;
+  }
+  const value=Math.min(1000000000,Number(digits));
+  formatBudgetInput(input,digits===''?'':fmt(value),e.inputType);
+  state.budget[cost]=value;
   state.budgetCurrency[cost]=currency;
-  updateTotal(e.target);
+  updateTotal(input);
  });
  $('#budgetrows').addEventListener('focusout',e=>{
   const {cost,currency}=e.target.dataset;
   if(cost){
    const row=rows.find(([key])=>key===cost);
-   e.target.value=Math.round(budgetAmount(row,currency));
+   e.target.value=fmt(budgetAmount(row,currency));
   }
  });
  $('#budgetrows').addEventListener('change',e=>{if(e.target.dataset.enable){state.enabled[e.target.dataset.enable]=e.target.checked;updateTotal();}});
