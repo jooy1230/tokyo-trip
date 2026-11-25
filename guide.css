@@ -231,11 +231,21 @@ header .calendar-dates time,header .trip-calendar b {font-variant-numeric:tabula
   font-size: .8125rem;
 }
 .budget-currency-code { color: var(--muted); font-weight: 500; }
-.budget-field .costinput {
-  width: 100%;
-  min-width: 0;
+.budget-amount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   padding-inline: 6px;
   background: #f5f3eb;
+  border-bottom: 1px dashed #a8ad9d;
   border-radius: 4px 4px 0 0;
+}
+.budget-field .costinput {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding-inline: 0;
+  border: 0;
   font-variant-numeric: tabular-nums;
 }
+.budget-unit { flex: none; color: var(--muted); }

@@ -96,7 +96,7 @@
  ['buffer','예비비 · 두 사람','JPY','추가 이동·택시·가격 변동 등. 실제 사용액 아님','예상'],
  ['shopping','쇼핑 · 두 사람','JPY','명품·빈티지·그릇·디즈니 굿즈. 원하는 한도 입력','별도 예산']
  ];
- const budgetCurrencies=[['JPY','엔화'],['KRW','원화']];
+ const budgetCurrencies=[['JPY','엔화','엔'],['KRW','원화','원']];
  function enabled(k){return !['dpa','extra','sky'].includes(k)||state.enabled[k];}
  // Keep the entered currency and amount so changing the rate does not compound rounding.
  function budgetAmount([key,,defaultCurrency],currency){
@@ -118,12 +118,15 @@
   $('#fx').value=state.fx;
   $('#budgetrows').innerHTML=rows.map(([k,title,,note,type])=>{
    const optional=['dpa','extra','sky'].includes(k);
-   const fields=budgetCurrencies.map(([currency,name])=>`
+   const fields=budgetCurrencies.map(([currency,name,unit])=>`
     <label class="budget-field" for="budget-${k}-${currency}">
      <span>${name} <span class="budget-currency-code">${currency}</span></span>
-     <input class="costinput" inputmode="numeric" type="text"
-      id="budget-${k}-${currency}" data-cost="${k}" data-currency="${currency}"
-      aria-label="${esc(title)} ${name}">
+     <span class="budget-amount">
+      <input class="costinput" inputmode="numeric" type="text"
+       id="budget-${k}-${currency}" data-cost="${k}" data-currency="${currency}"
+       aria-label="${esc(title)} ${name}">
+      <span class="budget-unit" aria-hidden="true">${unit}</span>
+     </span>
     </label>`).join('');
    return `<tr><td><label>${optional?`<input type="checkbox" data-enable="${k}" ${state.enabled[k]?'checked':''} aria-label="${esc(title)} 예산 포함">`:''}
     <span>${esc(title)} <span class="badge ${['공식 공지','운임 참고'].includes(type)?'':'est'}">${type}</span><small>${esc(note)}</small></span>
