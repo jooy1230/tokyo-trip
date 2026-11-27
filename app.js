@@ -46,10 +46,10 @@
   "나리타 제3터미널 → 공항철도로 히가시니혼바시 APA → 아사쿠사선으로 히가시긴자 → 도보로 긴자 쇼핑 → 교바시 몽벨 → 마루노우치 → 도쿄역에서 소부쾌속선으로 바쿠로초·APA.",
   "APA → 아사쿠사선·긴자선으로 가이엔마에 → 도보로 오모테산도와 하라주쿠 스투시 → 시부야역 서쪽 → 渋64 버스로 도쿄 오페라시티, 17시 우나후지 → 하쓰다이에서 게이오 신선·신주쿠선으로 바쿠로요코야마·APA. 요요기공원은 여유가 있을 때 들러요.",
   "바쿠로초 → 소부쾌속선으로 도쿄역 → 게이요선으로 마이하마 → 도보로 디즈니랜드. 17시 전후 퇴장 후 마이하마·도쿄역을 거쳐 APA로. 긴자가 선택이면 도쿄역에서 걸어가고 히가시긴자에서 아사쿠사선으로 복귀.",
-  "APA → 아사쿠사선으로 아사쿠사 → 도보로 고토부키의 nobori와 구라마에의 proto → 아사쿠사선으로 APA에 돌아와 짐 찾기 → 공항철도로 나리타 제3터미널. 16:30 도착 목표."
+  "APA → 아사쿠사선으로 아사쿠사 → 도보로 아사히맥주 본사 스카이룸 → 고토부키의 nobori → 구라마에의 proto → 아사쿠사선으로 APA에 돌아와 짐 찾기 → 공항철도로 나리타 제3터미널. 16:30 도착 목표."
 ];
  function routeMap(d) {
-  const file = `route-maps/day-${String(d.id + 1).padStart(2, '0')}.png?v=${d.id === 0 ? '10' : '9'}`;
+  const file = `route-maps/day-${String(d.id + 1).padStart(2, '0')}.png?v=${d.id === 0 ? '10' : d.id === 3 ? '11' : '9'}`;
   return `<figure class="route-map">
    <img src="${file}" width="1880" height="356" alt="${esc(routeMapDescriptions[d.id])}" loading="lazy" decoding="async">
    <figcaption><span>이동 순서도 · 축척 없음</span><a href="${file}" target="_blank" rel="noopener noreferrer" aria-label="${d.date} 이동 지도 크게 보기">지도 크게 보기</a></figcaption>
@@ -73,8 +73,8 @@
  };
  function routeLink(title){
  const points={'도쿄 오페라시티':'Tokyo Opera City','하쓰다이':'Hatsudai Station','나리타공항 제2·3터미널역':'Narita Airport Terminal 2 3 Station','공항 제2·3터미널역':'Narita Airport Terminal 2 3 Station','신바시':'Shimbashi Station Tokyo','신바시역':'Shimbashi Station Tokyo','호텔':T.hotel,'히가시니혼바시':'Higashi-nihombashi Station','바쿠로초':'Bakurocho Station','바쿠로요코야마':'Bakuro-yokoyama Station','히가시긴자':'Higashi-ginza Station','마루노우치':'Marunouchi Naka-dori Tokyo','도쿄역':'Tokyo Station Japan','도쿄':'Tokyo Station Japan','가이엔마에':'Gaiemmae Station Tokyo','가이엔':'Meiji Jingu Gaien Ginkgo Avenue','시부야':'Shibuya Station Tokyo','롯폰기':'Roppongi Station Tokyo','시오도메':'Shiodome Station Tokyo','마이하마':'Maihama Station Japan','마이하마역':'Maihama Station Japan','디즈니랜드':'Tokyo Disneyland','아사쿠사':'Sensoji Temple Tokyo','구라마에':'Kuramae Asakusa Line Station Tokyo','nobori':'Douguya nobori 3-7-1 Kotobuki','proto':'proto 4-20-12 Kuramae'};
- const parts=title.split('→').map(v=>v.trim());const walk=['도쿄역 → 긴자 → 히가시긴자','도쿄역 → 황궁 외원 → 히가시긴자','히가시니혼바시 → 호텔','히가시긴자 → 긴자 매장 → 교바시 몽벨 → 마루노우치','가이엔 → 오모테산도 → 시부야','마이하마역 → 디즈니랜드','아사쿠사 → nobori → proto'].includes(title);
- const waypoints=title.includes('교바시 몽벨')?'BRAND OFF Ginza Main Store|Mont-bell Tokyo Kyobashi Tokyo Square Garden':title.includes('황궁 외원')?'Nijubashi Bridge Tokyo|GINZA SIX':'';
+ const parts=title.split('→').map(v=>v.trim());const walk=['도쿄역 → 긴자 → 히가시긴자','도쿄역 → 황궁 외원 → 히가시긴자','히가시니혼바시 → 호텔','히가시긴자 → 긴자 매장 → 교바시 몽벨 → 마루노우치','가이엔 → 오모테산도 → 시부야','마이하마역 → 디즈니랜드','아사쿠사 → 아사히 본사 → nobori → proto'].includes(title);
+ const waypoints=title.includes('아사히 본사')?'Asahi Sky Room Asakusa|Douguya nobori 3-7-1 Kotobuki':title.includes('교바시 몽벨')?'BRAND OFF Ginza Main Store|Mont-bell Tokyo Kyobashi Tokyo Square Garden':title.includes('황궁 외원')?'Nijubashi Bridge Tokyo|GINZA SIX':'';
  return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(points[parts[0]]||parts[0]+' Tokyo Japan')+'&destination='+encodeURIComponent(points[parts[parts.length-1]]||parts[parts.length-1]+' Tokyo Japan')+(waypoints?'&waypoints='+encodeURIComponent(waypoints):'')+'&travelmode='+(walk?'walking':'transit');
  }
  function renderRoutes(){
